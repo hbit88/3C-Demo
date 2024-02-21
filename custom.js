@@ -17,6 +17,7 @@ function csEndCall() {
     document.getElementById('phoneNo').innerHTML = "";
     $('#transferCall').attr('disabled', 'disabled');
     $('#transferCallAcd').attr('disabled', 'disabled');
+    recordeStop();
 }
 
 // đổ chuông trình duyệt của agent khi gọi ra
@@ -37,6 +38,7 @@ function csAcceptCall() {
     document.getElementById('phoneNo').innerHTML = "Đang trả lời";
     $('#transferCall').removeAttr('disabled');
     $('#transferCallAcd').removeAttr('disabled');
+    recordeCall();
 
 }
 
@@ -44,6 +46,7 @@ function csAcceptCall() {
 function csCustomerAccept() {
     console.log("csCustomerAccept");
     document.getElementById('phoneNo').innerHTML = "Đang trả lời";
+    recordeCall();
 }
 
 function csMuteCall() {
@@ -150,4 +153,46 @@ async function login() {
     } catch (error) {
         console.error('Error during login:', error);
     }
+}
+
+let audioCtx;
+let track;
+let recorder;
+function recordeCall()
+{
+    navigator.mediaDevices.getUserMedia ({audio: true, video: false}).then(function(stream) {
+        //startBtn.setAttribute('disabled', true);
+        //stopBtn.removeAttribute('disabled');		
+        /**
+         * Create a MediaStreamAudioSourceNode Feed the HTMLMediaElement into it
+         */
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+        track = stream.getTracks()[0];
+        let source = audioCtx.createMediaStreamSource(stream); 
+       // recorder = new Recorder(source);
+		//recorder.record();
+      
+        /**
+         *Create a biquadfilter
+            */
+        let biquadFilter = audioCtx.createBiquadFilter();
+
+        biquadFilter.type = "lowshelf";
+        biquadFilter.frequency.value = 1000;
+        /**
+         * biquadFilter.gain.value = range.value; connect the AudioBufferSourceNode to the 
+         * gainNode and the gainNode to the destination, so we can play the music and adjust
+         * the volume using the mouse cursor
+         */
+        source.connect(biquadFilter);
+        biquadFilter.connect(audioCtx.destination);
+    })
+    .catch(function(err) {
+        console.log('The following gUM error occured: ' + err);
+    });
+}
+function recordeStop()
+{
+    track.stop();
 }
