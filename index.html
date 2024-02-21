@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>3C MobiFone </title>
+    <script>
+        var token1 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImFsZ29yaXRobSI6IkhTMjU2In0.eyJpcHBob25lIjoiNDAxXzIwMiIsImV4cGlyZWQiOiIyMDI1LTAxLTEzVDEwOjA3OjQ2LjY2M1oiLCJpYXQiOjE3MDU2NTg4NjZ9.v-h-3LL39uDhLmCLgUAeDZZnFDXk3_EY18yKTzX-KEE";
+        var token2 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImFsZ29yaXRobSI6IkhTMjU2In0.eyJpcHBob25lIjoiNDAxXzIwMSIsImV4cGlyZWQiOiIyMDI1LTAxLTAzVDExOjAyOjM5Ljk0NloiLCJpYXQiOjE3MDQ3OTgxNTl9.AAAJSv0p3reiEvkjjDYVCm-On_EyWjMvNplmMHRxbWg";
+        
+        var token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImFsZ29yaXRobSI6IkhTMjU2In0.eyJpcHBob25lIjoiMjg0XzI4NCIsImV4cGlyZWQiOiIyMDI1LTAxLTEzVDAzOjI1OjI4LjE1N1oiLCJpYXQiOjE3MDU2MzQ3Mjh9.BBeBt7yikwsDRSpBQv4sFlChWytbntyCoxly62LwCZ8";
+        var domain = "0898776879";
+        var secretKey = "FM3+zYwjlaH0GNQ8";
+        var agentId = "284_284";
+
+        var domain1 = "0898768886"; 
+        var secretKey1 = 'KZY1rJ0nLrx0Zjgd'; // Replace with your actual secret key 
+        var agentId1 = "401_202";  
+
+        var hoster = "https://3c-capi.mobifone.vn/";
+
+    </script>
+</head>
+
+<body>
+    <div>
+        <video id="my-video" autoplay style="display: none;" src="https://3c-capi.mobifone.vn/images/320x240.ogg">
+        </video>
+        <video id="peer-video" autoplay style="display: none;" src="https://3c-capi.mobifone.vn/images/320x240.ogg">
+        </video>
+        <button id="enable" onclick="csEnableCall()">1. Kích hoạt thoại </button><br />
+        <button id="enable" onclick="changeCallStatus()">2. On/Off trạng thái</button><br />
+        <input type="text" id="phoneNumber" value="" /><button onclick="onCallout()">3. Gọi ra</button><br />
+        <button onclick="endCall();">4.Kết thúc cuộc gọi ra</button><br /><br /><br /><br />
+        <label id="phoneNo"></label><br />
+        <button onclick="onAcceptCall();">I. Nhận cuộc gọi vào</button><br />
+        <button onclick="muteCall();">II. Mute/Unmute</button><br />
+        <button onclick="holdCall();">III.Hold/Unhold</button><br />
+        <button onclick="endCall();">IV.Kết thúc cuộc gọi vào</button><br />
+        <button onclick="transferCall();" id="transferCall" disabled>V.Chuyển cuộc gọi</button><br />
+        <button onclick="transferCallToAcd();" id="transferCallAcd" disabled>VI.Chuyển cuộc gọi sang nhánh
+            acd</button><br />
+        <button onclick="responseTransferAgent(1);" id="transferResponseOK" disabled>VII.Chấp nhận chuyển
+            cg</button><br />
+        <button onclick="responseTransferAgent(0);" id="transferResponseReject" disabled>VII.Từ chối chuyển
+            cg</button><br />
+        <button onclick="changeDevice(1);" id="csShowDeviceType1">VIII. Đăng nhập trình duyệt</button><br />
+        <button onclick="changeDevice(2);" id="csShowDeviceType2">IX. Đăng nhập IP phone</button><br />
+        <button onclick="changeDevice(3,'0792736868');" id="csShowDeviceType3">X. Dùng Điện Thoại</button><br />
+        <button onclick="changeDevice(4);" id="csShowDeviceType4">XI. Extention</button><br />
+        <button onclick="changeDevice(6);" id="csShowDeviceType6">XII. 3C SoftPhone</button><br />
+    </div>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://3c-capi.mobifone.vn/js/embed/jquery.min.js" type="text/javascript"></script>
+    <script src="https://3c-capi.mobifone.vn/js/embed/jssip-3.2.10.js" type="text/javascript"></script>
+   
+    <script src="https://3c-capi.mobifone.vn/js/embed/init-3.0.7.js" type="text/javascript"></script>
+   <!-- <script src="https://3c-web1.mobifone.vn/js/lib/init-3.0.7.js" type="text/javascript"></script>-->
+    <script src="https://3c-capi.mobifone.vn/js/embed/web.push.js" type="text/javascript"></script>
+    <script src="https://3c-capi.mobifone.vn/js/embed/cs_const.js" type="text/javascript"></script>
+    <script src="https://3c-capi.mobifone.vn/js/embed/cs_voice.js" type="text/javascript"></script>  
+    <!--<script src="cs_voice.js" type="text/javascript"></script> -->
+    <script src="custom.js" type="text/javascript"></script>
+    <script>
+        csInit(token, domain);
+    </script>
+
+    <script>
+        function transferCall() {
+            getTransferAgent();
+            csTransferCallAgent("your_aegnt_ipphone");
+        }
+        function transferCallToAcd() {
+            csTransferCallAcd("your_queue_acd_id");
+        }
+
+        function onCallout() {
+            csCallout($('#phoneNumber').val());
+        }
+    </script>
+    <br />
+
+    <div>
+        <button onclick="onClick()">Click call login API</button>
+    </div>
+    <script>
+
+        function onClick(e) {
+            //let url = "https://3c-capi.mobifone.vn/0898768886/thirdParty/login";
+            let url = "https://3c-capi.mobifone.vn/" + domain + "/thirdParty/login";
+            let data = {
+                "token": token
+            };
+            axios({
+                method: 'post',
+                url: url,
+                data: data
+            }).then
+                (data => {
+                    console.log(data);
+
+                }).catch(err => alert(err))
+        }
+    </script>
+
+    <br />
+    <div> <input type="text" id="phoneNumber_1" value="" /> <a id="clickToCall" href="#"> Click to call popup
+        </a> </div>
+    <script>
+        // Get the link element by ID
+        const clickToCall = document.getElementById('clickToCall');
+        // Add a click event listener to the link
+        clickToCall.addEventListener('click', function () {
+            var number = $('#phoneNumber_1').val()
+            // Construct the URL with the variables
+            const url = `https://3c-c2c.mobifone.vn/${domain}/c2call?token=${token}&number=${number}`;
+            // Open the URL in a popup window
+            window.open(url, 'CallPopup', 'width=400,height=600');
+        });
+    </script>
+
+<br />
+<div> <input type="text" id="ipphone" value="" /> <a id="getToken" href="#"> Get token
+    </a> </div>
+<script>
+
+    // Get the link element by ID
+    const getToken = document.getElementById('getToken');
+    // Add a click event listener to the link
+    getToken.addEventListener('click', function () {
+        const jwt = require('jsonwebtoken');
+        const axios = require('axios');
+
+        const domain = "0898768886"; 
+        const secret = 'KZY1rJ0nLrx0Zjgd'; // Replace with your actual secret key 
+        const agentId = "401_201";    
+        const expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 360);
+
+        const payload = {
+            ipphone: agentId,
+            expired: expirationDate,
+        }; 
+        const header = {
+            algorithm: 'HS256',  // Specify the signing algorithm
+            typ: 'JWT',  // Add the "typ" claim
+        };  
+        const token = jwt.sign(payload, secret,{ header });
+        console.log(token);
+
+        const apiUrl = `https://3c-capi.mobifone.vn/${domain}/thirdParty/login`;
+        axios.post(apiUrl, { token: token })
+            .then(response => {
+                // Handle the API response here
+                console.log(response.data);
+            })
+            .catch(error => {
+                // Handle errors here
+                console.error(error.message);
+            });  
+     
+    });
+</script>
+
+ <!-- 
+    <br />
+    <div>
+        <audio id="gum-local" controls autoplay></audio>
+    </div>
+    <script src="voice.js" type="text/javascript"></script>-->
+</body>
+
+</html>
