@@ -71,8 +71,7 @@ function checkMedia() {
         if (navigator.getUserMedia) {
             navigator.getUserMedia({audio: true},
                     function (stream) {
-                        console.log("Accessed the Microphone");
-              
+                        console.log("Accessed the Microphone"); 
                     },
                     function (err) {
                         console.log("Error: Cannot access the microphone");
